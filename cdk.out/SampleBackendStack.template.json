@@ -1,0 +1,753 @@
+{
+  "Resources": {
+    "MyFirstBucketB8884501": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "aws-cdk:auto-delete-objects",
+            "Value": "true"
+          }
+        ]
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/MyFirstBucket/Resource"
+      }
+    },
+    "MyFirstBucketPolicy3243DEFD": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "MyFirstBucketB8884501"
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*"
+              ],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::GetAtt": [
+                    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+                    "Arn"
+                  ]
+                }
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "MyFirstBucketB8884501",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "MyFirstBucketB8884501",
+                          "Arn"
+                        ]
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": "s3:GetObject",
+              "Effect": "Allow",
+              "Principal": {
+                "CanonicalUser": {
+                  "Fn::GetAtt": [
+                    "CfOaiE3035D7D",
+                    "S3CanonicalUserId"
+                  ]
+                }
+              },
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    {
+                      "Fn::GetAtt": [
+                        "MyFirstBucketB8884501",
+                        "Arn"
+                      ]
+                    },
+                    "/*"
+                  ]
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/MyFirstBucket/Policy/Resource"
+      }
+    },
+    "MyFirstBucketAutoDeleteObjectsCustomResourceC52FCF6E": {
+      "Type": "Custom::S3AutoDeleteObjects",
+      "Properties": {
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+            "Arn"
+          ]
+        },
+        "BucketName": {
+          "Ref": "MyFirstBucketB8884501"
+        }
+      },
+      "DependsOn": [
+        "MyFirstBucketPolicy3243DEFD"
+      ],
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/MyFirstBucket/AutoDeleteObjectsCustomResource/Default"
+      }
+    },
+    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ]
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role"
+      }
+    },
+    "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": "cdk-hnb659fds-assets-312393305492-ap-northeast-1",
+          "S3Key": "bdb08b9984816ecf43301a0c6d8913e270ee2448940b6b95e430dd222a4d90be.zip"
+        },
+        "Timeout": 900,
+        "MemorySize": 128,
+        "Handler": "__entrypoint__.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs12.x",
+        "Description": {
+          "Fn::Join": [
+            "",
+            [
+              "Lambda function for auto-deleting objects in ",
+              {
+                "Ref": "MyFirstBucketB8884501"
+              },
+              " S3 bucket."
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
+        "aws:asset:path": "asset.bdb08b9984816ecf43301a0c6d8913e270ee2448940b6b95e430dd222a4d90be",
+        "aws:asset:property": "Code"
+      }
+    },
+    "CfOaiE3035D7D": {
+      "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
+      "Properties": {
+        "CloudFrontOriginAccessIdentityConfig": {
+          "Comment": "Access identity for S3 bucket"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/CfOai/Resource"
+      }
+    },
+    "CfDistributionCFDistribution711241B3": {
+      "Type": "AWS::CloudFront::Distribution",
+      "Properties": {
+        "DistributionConfig": {
+          "Aliases": [
+            "asai.my-theme.site"
+          ],
+          "DefaultCacheBehavior": {
+            "AllowedMethods": [
+              "GET",
+              "HEAD"
+            ],
+            "CachedMethods": [
+              "GET",
+              "HEAD"
+            ],
+            "Compress": true,
+            "ForwardedValues": {
+              "Cookies": {
+                "Forward": "none"
+              },
+              "QueryString": false
+            },
+            "TargetOriginId": "origin1",
+            "ViewerProtocolPolicy": "redirect-to-https"
+          },
+          "DefaultRootObject": "index.html",
+          "Enabled": true,
+          "HttpVersion": "http2",
+          "IPV6Enabled": true,
+          "Origins": [
+            {
+              "ConnectionAttempts": 3,
+              "ConnectionTimeout": 10,
+              "DomainName": {
+                "Fn::GetAtt": [
+                  "MyFirstBucketB8884501",
+                  "RegionalDomainName"
+                ]
+              },
+              "Id": "origin1",
+              "S3OriginConfig": {
+                "OriginAccessIdentity": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "origin-access-identity/cloudfront/",
+                      {
+                        "Ref": "CfOaiE3035D7D"
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ],
+          "PriceClass": "PriceClass_100",
+          "ViewerCertificate": {
+            "AcmCertificateArn": "arn:aws:acm:us-east-1:312393305492:certificate/bddf6609-0ef5-4680-888a-3b1752612f8a",
+            "SslSupportMethod": "sni-only"
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/CfDistribution/CFDistribution"
+      }
+    },
+    "TableCD117FA1": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "KeySchema": [
+          {
+            "AttributeName": "id",
+            "KeyType": "HASH"
+          }
+        ],
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "id",
+            "AttributeType": "S"
+          }
+        ],
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 5,
+          "WriteCapacityUnits": 5
+        }
+      },
+      "UpdateReplacePolicy": "Retain",
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/Table/Resource"
+      }
+    },
+    "NotificationMangaLambdaServiceRoleCE1BFDDE": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/NotificationMangaLambda/ServiceRole/Resource"
+      }
+    },
+    "NotificationMangaLambdaServiceRoleDefaultPolicy3D1AD8D2": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:DescribeTable"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "TableCD117FA1",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Ref": "AWS::NoValue"
+                }
+              ]
+            },
+            {
+              "Action": "ses:SendEmail",
+              "Effect": "Allow",
+              "Resource": "*"
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "NotificationMangaLambdaServiceRoleDefaultPolicy3D1AD8D2",
+        "Roles": [
+          {
+            "Ref": "NotificationMangaLambdaServiceRoleCE1BFDDE"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/NotificationMangaLambda/ServiceRole/DefaultPolicy/Resource"
+      }
+    },
+    "NotificationMangaLambda93FC3EF1": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": "cdk-hnb659fds-assets-312393305492-ap-northeast-1",
+          "S3Key": "4dbe891e7b9264bd5404aae6ca2eb7215fe0d071bdc982fb800c14822eb0525e.zip"
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "NotificationMangaLambdaServiceRoleCE1BFDDE",
+            "Arn"
+          ]
+        },
+        "Environment": {
+          "Variables": {
+            "ASAI_TABLE_NAME": {
+              "Ref": "TableCD117FA1"
+            },
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1"
+          }
+        },
+        "Handler": "index.handler",
+        "Runtime": "nodejs14.x",
+        "Timeout": 20
+      },
+      "DependsOn": [
+        "NotificationMangaLambdaServiceRoleDefaultPolicy3D1AD8D2",
+        "NotificationMangaLambdaServiceRoleCE1BFDDE"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/NotificationMangaLambda/Resource",
+        "aws:asset:path": "asset.4dbe891e7b9264bd5404aae6ca2eb7215fe0d071bdc982fb800c14822eb0525e",
+        "aws:asset:is-bundled": true,
+        "aws:asset:property": "Code"
+      }
+    },
+    "ServerlessRestApiCF2706A6": {
+      "Type": "AWS::ApiGateway::RestApi",
+      "Properties": {
+        "Name": "ServerlessRestApi"
+      },
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/ServerlessRestApi/Resource"
+      }
+    },
+    "ServerlessRestApiDeployment3BF8AA91f558ef14d55c490e7d897a7b211e42f8": {
+      "Type": "AWS::ApiGateway::Deployment",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "ServerlessRestApiCF2706A6"
+        },
+        "Description": "Automatically created by the RestApi construct"
+      },
+      "DependsOn": [
+        "ServerlessRestApiGET34A610DA",
+        "ServerlessRestApiOPTIONSC03D3CE8"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/ServerlessRestApi/Deployment/Resource"
+      }
+    },
+    "ServerlessRestApiDeploymentStageprodA626EFFC": {
+      "Type": "AWS::ApiGateway::Stage",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "ServerlessRestApiCF2706A6"
+        },
+        "DeploymentId": {
+          "Ref": "ServerlessRestApiDeployment3BF8AA91f558ef14d55c490e7d897a7b211e42f8"
+        },
+        "StageName": "prod"
+      },
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/ServerlessRestApi/DeploymentStage.prod/Resource"
+      }
+    },
+    "ServerlessRestApiOPTIONSC03D3CE8": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "OPTIONS",
+        "ResourceId": {
+          "Fn::GetAtt": [
+            "ServerlessRestApiCF2706A6",
+            "RootResourceId"
+          ]
+        },
+        "RestApiId": {
+          "Ref": "ServerlessRestApiCF2706A6"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationResponses": [
+            {
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Methods": "'GET'"
+              },
+              "StatusCode": "204"
+            }
+          ],
+          "RequestTemplates": {
+            "application/json": "{ statusCode: 200 }"
+          },
+          "Type": "MOCK"
+        },
+        "MethodResponses": [
+          {
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Methods": true
+            },
+            "StatusCode": "204"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/ServerlessRestApi/Default/OPTIONS/Resource"
+      }
+    },
+    "ServerlessRestApiGETApiPermissionSampleBackendStackServerlessRestApiCA609621GET822245AB": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "NotificationMangaLambda93FC3EF1",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:ap-northeast-1:312393305492:",
+              {
+                "Ref": "ServerlessRestApiCF2706A6"
+              },
+              "/",
+              {
+                "Ref": "ServerlessRestApiDeploymentStageprodA626EFFC"
+              },
+              "/GET/"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/ServerlessRestApi/Default/GET/ApiPermission.SampleBackendStackServerlessRestApiCA609621.GET.."
+      }
+    },
+    "ServerlessRestApiGETApiPermissionTestSampleBackendStackServerlessRestApiCA609621GETCE4437D0": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "NotificationMangaLambda93FC3EF1",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:ap-northeast-1:312393305492:",
+              {
+                "Ref": "ServerlessRestApiCF2706A6"
+              },
+              "/test-invoke-stage/GET/"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/ServerlessRestApi/Default/GET/ApiPermission.Test.SampleBackendStackServerlessRestApiCA609621.GET.."
+      }
+    },
+    "ServerlessRestApiGET34A610DA": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "ResourceId": {
+          "Fn::GetAtt": [
+            "ServerlessRestApiCF2706A6",
+            "RootResourceId"
+          ]
+        },
+        "RestApiId": {
+          "Ref": "ServerlessRestApiCF2706A6"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:ap-northeast-1:lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "NotificationMangaLambda93FC3EF1",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/ServerlessRestApi/Default/GET/Resource"
+      }
+    },
+    "route53PartsARecordBA7CCA43": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "Name": "asai.my-theme.site.",
+        "Type": "A",
+        "AliasTarget": {
+          "DNSName": {
+            "Fn::GetAtt": [
+              "CfDistributionCFDistribution711241B3",
+              "DomainName"
+            ]
+          },
+          "HostedZoneId": {
+            "Fn::FindInMap": [
+              "AWSCloudFrontPartitionHostedZoneIdMap",
+              {
+                "Ref": "AWS::Partition"
+              },
+              "zoneId"
+            ]
+          }
+        },
+        "HostedZoneId": "Z02650671EO7KVTMWHGB5"
+      },
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/route53Parts/ARecord/Resource"
+      }
+    },
+    "route53PartsAaaaRecordB5EEA349": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "Name": "asai.my-theme.site.",
+        "Type": "AAAA",
+        "AliasTarget": {
+          "DNSName": {
+            "Fn::GetAtt": [
+              "CfDistributionCFDistribution711241B3",
+              "DomainName"
+            ]
+          },
+          "HostedZoneId": {
+            "Fn::FindInMap": [
+              "AWSCloudFrontPartitionHostedZoneIdMap",
+              {
+                "Ref": "AWS::Partition"
+              },
+              "zoneId"
+            ]
+          }
+        },
+        "HostedZoneId": "Z02650671EO7KVTMWHGB5"
+      },
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/route53Parts/AaaaRecord/Resource"
+      }
+    },
+    "CDKMetadata": {
+      "Type": "AWS::CDK::Metadata",
+      "Properties": {
+        "Analytics": "v2:deflate64:H4sIAAAAAAAA/21RTW/CMAz9LdxDtg6xe2FC2oGBYNKOKE1MF2iTKk5AVZX/vnx0wKSd/Bw/Pz87L7SY0+cJu+KUi/O0kRUd9pbxMwlPhwFndFg4fgZLlkc1ohy2upG8vz+PeU4WDMET3mgnjkYrS4eNkbVUJeeA+C5AWWlT8zJyVpHzP+NW/oLqTaI1snJWahV7H3NPRK9Yq0VY4JNVDURCAp40rK0EOygt4IT0I4WVUzzpSNbSYadzQ4r3zTLyBGcHhggWaRnDKEiHQLnpRDqYViImN6yTNbNwZX1QB7RlJ9OAEb5B1+i+DVumRe5ZOH6drGQQ+NoZDvGgZA32W4tYzMgTo52FefikcgdcG5FHRLQPNkvGWM68J0uHVre/eqOXEf8pbY2+SAGGpF2jDalq8ti4cbZzyfiadV2oehJvS0/4dCleaTGjxeSEUk6NC7/YAt3l+APfJAaHbQIAAA=="
+      },
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/CDKMetadata/Default"
+      }
+    }
+  },
+  "Outputs": {
+    "ServerlessRestApiEndpoint5118C609": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "ServerlessRestApiCF2706A6"
+            },
+            ".execute-api.ap-northeast-1.",
+            {
+              "Ref": "AWS::URLSuffix"
+            },
+            "/",
+            {
+              "Ref": "ServerlessRestApiDeploymentStageprodA626EFFC"
+            },
+            "/"
+          ]
+        ]
+      }
+    },
+    "CloudFrontUrl": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Fn::GetAtt": [
+                "CfDistributionCFDistribution711241B3",
+                "DomainName"
+              ]
+            },
+            "/"
+          ]
+        ]
+      }
+    }
+  },
+  "Mappings": {
+    "AWSCloudFrontPartitionHostedZoneIdMap": {
+      "aws": {
+        "zoneId": "Z2FDTNDATAQYW2"
+      },
+      "aws-cn": {
+        "zoneId": "Z3RFFRIM2A3IF5"
+      }
+    }
+  },
+  "Parameters": {
+    "BootstrapVersion": {
+      "Type": "AWS::SSM::Parameter::Value<String>",
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+    }
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                  ],
+                  {
+                    "Ref": "BootstrapVersion"
+                  }
+                ]
+              }
+            ]
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+        }
+      ]
+    }
+  }
+}

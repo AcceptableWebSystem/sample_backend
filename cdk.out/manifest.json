@@ -1,0 +1,202 @@
+{
+  "version": "16.0.0",
+  "artifacts": {
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    },
+    "SampleBackendStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "SampleBackendStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "SampleBackendStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://312393305492/ap-northeast-1",
+      "properties": {
+        "templateFile": "SampleBackendStack.template.json",
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::312393305492:role/cdk-hnb659fds-deploy-role-312393305492-ap-northeast-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::312393305492:role/cdk-hnb659fds-cfn-exec-role-312393305492-ap-northeast-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-312393305492-ap-northeast-1/42e49ed20cb8d5202321a1902fb68d21c70ff239e42eac358f0ed69c24f7c1fe.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "SampleBackendStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::312393305492:role/cdk-hnb659fds-lookup-role-312393305492-ap-northeast-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "SampleBackendStack.assets"
+      ],
+      "metadata": {
+        "/SampleBackendStack/MyFirstBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyFirstBucketB8884501"
+          }
+        ],
+        "/SampleBackendStack/MyFirstBucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyFirstBucketPolicy3243DEFD"
+          }
+        ],
+        "/SampleBackendStack/MyFirstBucket/AutoDeleteObjectsCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyFirstBucketAutoDeleteObjectsCustomResourceC52FCF6E"
+          }
+        ],
+        "/SampleBackendStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+          }
+        ],
+        "/SampleBackendStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F"
+          }
+        ],
+        "/SampleBackendStack/CfOai/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CfOaiE3035D7D"
+          }
+        ],
+        "/SampleBackendStack/CfDistribution/CFDistribution": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CfDistributionCFDistribution711241B3"
+          }
+        ],
+        "/SampleBackendStack/Table/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "TableCD117FA1"
+          }
+        ],
+        "/SampleBackendStack/NotificationMangaLambda/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NotificationMangaLambdaServiceRoleCE1BFDDE"
+          }
+        ],
+        "/SampleBackendStack/NotificationMangaLambda/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NotificationMangaLambdaServiceRoleDefaultPolicy3D1AD8D2"
+          }
+        ],
+        "/SampleBackendStack/NotificationMangaLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "NotificationMangaLambda93FC3EF1"
+          }
+        ],
+        "/SampleBackendStack/ServerlessRestApi/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServerlessRestApiCF2706A6"
+          }
+        ],
+        "/SampleBackendStack/ServerlessRestApi/Deployment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServerlessRestApiDeployment3BF8AA91f558ef14d55c490e7d897a7b211e42f8"
+          }
+        ],
+        "/SampleBackendStack/ServerlessRestApi/DeploymentStage.prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServerlessRestApiDeploymentStageprodA626EFFC"
+          }
+        ],
+        "/SampleBackendStack/ServerlessRestApi/Endpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServerlessRestApiEndpoint5118C609"
+          }
+        ],
+        "/SampleBackendStack/ServerlessRestApi/Default/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServerlessRestApiOPTIONSC03D3CE8"
+          }
+        ],
+        "/SampleBackendStack/ServerlessRestApi/Default/GET/ApiPermission.SampleBackendStackServerlessRestApiCA609621.GET..": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServerlessRestApiGETApiPermissionSampleBackendStackServerlessRestApiCA609621GET822245AB"
+          }
+        ],
+        "/SampleBackendStack/ServerlessRestApi/Default/GET/ApiPermission.Test.SampleBackendStackServerlessRestApiCA609621.GET..": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServerlessRestApiGETApiPermissionTestSampleBackendStackServerlessRestApiCA609621GETCE4437D0"
+          }
+        ],
+        "/SampleBackendStack/ServerlessRestApi/Default/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServerlessRestApiGET34A610DA"
+          }
+        ],
+        "/SampleBackendStack/CloudFrontUrl": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CloudFrontUrl"
+          }
+        ],
+        "/SampleBackendStack/route53Parts/ARecord/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "route53PartsARecordBA7CCA43"
+          }
+        ],
+        "/SampleBackendStack/route53Parts/AaaaRecord/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "route53PartsAaaaRecordB5EEA349"
+          }
+        ],
+        "/SampleBackendStack/AWSCloudFrontPartitionHostedZoneIdMap": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AWSCloudFrontPartitionHostedZoneIdMap"
+          }
+        ],
+        "/SampleBackendStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/SampleBackendStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/SampleBackendStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "SampleBackendStack"
+    }
+  }
+}
