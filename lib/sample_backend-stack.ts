@@ -10,10 +10,12 @@ import { route53Construct } from './route53'
 import * as lambda from 'aws-cdk-lib/aws-lambda-nodejs';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
+import * as cognito from 'aws-cdk-lib/aws-cognito';
 
 export class SampleBackendStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
-    super(scope, id, props);
+    // 継承しているクラス（親クラス）のコンストラクタを呼び出す
+    super(scope, id, props);  // cdk.Stackを継承したクラスはCloudFormationの1レコードに相当する
 
     const bucket = new s3.Bucket(this, 'MyFirstBucket', {
       removalPolicy: cdk.RemovalPolicy.DESTROY, // コードが消えるとリソースも消す
@@ -106,6 +108,21 @@ export class SampleBackendStack extends cdk.Stack {
         effect: iam.Effect.ALLOW, // 許可
       })
     );
+
+    //認証
+    const myCognito = new cognito.UserPool(this, "myCognito", {
+      signInAliases: { username: true, email: true, preferredUsername: true },
+      standardAttributes: {
+        email: { required: true, mutable: true },
+        preferredUsername: { required: false, mutable: true },
+      },
+      accountRecovery: cognito.AccountRecovery.EMAIL_ONLY,
+      selfSignUpEnabled: true,
+    });
+    myCognito.addClient("myClient", {
+      authFlows: {}, // 要件で必要なら追加
+      generateSecret: false,
+    });
 
     // コンソール出力
     new cdk.CfnOutput(this, "CloudFrontUrl", {

@@ -12,9 +12,10 @@ interface route53ConstructProps extends cdk.StackProps {
   cfDist: cdk.aws_cloudfront.IDistribution
 }
 
+// スタックではないけど、スタックの部品として小分けにできる
 export class route53Construct extends Construct {
   constructor(scope: Construct, id: string, props: route53ConstructProps) {
-    super(scope, id);
+    super(scope, id); // 中身の動きは知らなくていい。スタックを作るうえで必要だから渡してあげる。
 
     // 2
     // Route53
