@@ -23,7 +23,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::312393305492:role/cdk-hnb659fds-deploy-role-312393305492-ap-northeast-1",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::312393305492:role/cdk-hnb659fds-cfn-exec-role-312393305492-ap-northeast-1",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-312393305492-ap-northeast-1/42e49ed20cb8d5202321a1902fb68d21c70ff239e42eac358f0ed69c24f7c1fe.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-312393305492-ap-northeast-1/00a585ff332dfac776dac2e6781b3b486ee2e43b5d67723547818f59739a85b6.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -114,7 +114,7 @@
         "/SampleBackendStack/ServerlessRestApi/Deployment/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ServerlessRestApiDeployment3BF8AA91f558ef14d55c490e7d897a7b211e42f8"
+            "data": "ServerlessRestApiDeployment3BF8AA917198e834f79264fef6d990fdea9ad68b"
           }
         ],
         "/SampleBackendStack/ServerlessRestApi/DeploymentStage.prod/Resource": [
@@ -129,10 +129,16 @@
             "data": "ServerlessRestApiEndpoint5118C609"
           }
         ],
-        "/SampleBackendStack/ServerlessRestApi/Default/OPTIONS/Resource": [
+        "/SampleBackendStack/ServerlessRestApi/CustomDomain/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ServerlessRestApiOPTIONSC03D3CE8"
+            "data": "ServerlessRestApiCustomDomain2781767F"
+          }
+        ],
+        "/SampleBackendStack/ServerlessRestApi/CustomDomain/Map:--=>SampleBackendStackServerlessRestApiCA609621/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServerlessRestApiCustomDomainMapSampleBackendStackServerlessRestApiCA609621A9FFF5A1"
           }
         ],
         "/SampleBackendStack/ServerlessRestApi/Default/GET/ApiPermission.SampleBackendStackServerlessRestApiCA609621.GET..": [
@@ -153,22 +159,46 @@
             "data": "ServerlessRestApiGET34A610DA"
           }
         ],
+        "/SampleBackendStack/myCognito/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "myCognitoA719C4AD"
+          }
+        ],
+        "/SampleBackendStack/myCognito/myClient/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "myCognitomyClient7C6AA6B5"
+          }
+        ],
         "/SampleBackendStack/CloudFrontUrl": [
           {
             "type": "aws:cdk:logicalId",
             "data": "CloudFrontUrl"
           }
         ],
-        "/SampleBackendStack/route53Parts/ARecord/Resource": [
+        "/SampleBackendStack/route53Parts/appARecord/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "route53PartsARecordBA7CCA43"
+            "data": "route53PartsappARecord1DF869D1"
           }
         ],
-        "/SampleBackendStack/route53Parts/AaaaRecord/Resource": [
+        "/SampleBackendStack/route53Parts/appAaaaRecord/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "route53PartsAaaaRecordB5EEA349"
+            "data": "route53PartsappAaaaRecordB01AA048"
+          }
+        ],
+        "/SampleBackendStack/route53Parts/apiARecord/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "route53PartsapiARecord6ED6D449"
+          }
+        ],
+        "/SampleBackendStack/route53Parts/apiAaaaRecord/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "route53PartsapiAaaaRecord50BF7AED"
           }
         ],
         "/SampleBackendStack/AWSCloudFrontPartitionHostedZoneIdMap": [

@@ -288,7 +288,7 @@
                         "viewerProtocolPolicy": "redirect-to-https"
                       },
                       "aliases": [
-                        "asai.my-theme.site"
+                        "asai-app.my-theme.site"
                       ],
                       "viewerCertificate": {
                         "acmCertificateArn": "arn:aws:acm:us-east-1:312393305492:certificate/bddf6609-0ef5-4680-888a-3b1752612f8a",
@@ -505,7 +505,7 @@
                   "aws:cdk:cloudformation:props": {
                     "code": {
                       "s3Bucket": "cdk-hnb659fds-assets-312393305492-ap-northeast-1",
-                      "s3Key": "4dbe891e7b9264bd5404aae6ca2eb7215fe0d071bdc982fb800c14822eb0525e.zip"
+                      "s3Key": "af7015c6cad5decba5a76e56fa710828c6757f6f35db74b1eeb8f446ffc6213f.zip"
                     },
                     "role": {
                       "Fn::GetAtt": [
@@ -596,7 +596,7 @@
                           "Ref": "ServerlessRestApiCF2706A6"
                         },
                         "deploymentId": {
-                          "Ref": "ServerlessRestApiDeployment3BF8AA91f558ef14d55c490e7d897a7b211e42f8"
+                          "Ref": "ServerlessRestApiDeployment3BF8AA917198e834f79264fef6d990fdea9ad68b"
                         },
                         "stageName": "prod"
                       }
@@ -620,70 +620,72 @@
                   "version": "2.15.0"
                 }
               },
-              "Default": {
-                "id": "Default",
-                "path": "SampleBackendStack/ServerlessRestApi/Default",
+              "CustomDomain": {
+                "id": "CustomDomain",
+                "path": "SampleBackendStack/ServerlessRestApi/CustomDomain",
                 "children": {
-                  "OPTIONS": {
-                    "id": "OPTIONS",
-                    "path": "SampleBackendStack/ServerlessRestApi/Default/OPTIONS",
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "SampleBackendStack/ServerlessRestApi/CustomDomain/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGateway::DomainName",
+                      "aws:cdk:cloudformation:props": {
+                        "certificateArn": "arn:aws:acm:us-east-1:312393305492:certificate/bddf6609-0ef5-4680-888a-3b1752612f8a",
+                        "domainName": "asai-api.my-theme.site",
+                        "endpointConfiguration": {
+                          "types": [
+                            "EDGE"
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.CfnDomainName",
+                      "version": "2.15.0"
+                    }
+                  },
+                  "Map:--=>SampleBackendStackServerlessRestApiCA609621": {
+                    "id": "Map:--=>SampleBackendStackServerlessRestApiCA609621",
+                    "path": "SampleBackendStack/ServerlessRestApi/CustomDomain/Map:--=>SampleBackendStackServerlessRestApiCA609621",
                     "children": {
                       "Resource": {
                         "id": "Resource",
-                        "path": "SampleBackendStack/ServerlessRestApi/Default/OPTIONS/Resource",
+                        "path": "SampleBackendStack/ServerlessRestApi/CustomDomain/Map:--=>SampleBackendStackServerlessRestApiCA609621/Resource",
                         "attributes": {
-                          "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                          "aws:cdk:cloudformation:type": "AWS::ApiGateway::BasePathMapping",
                           "aws:cdk:cloudformation:props": {
-                            "httpMethod": "OPTIONS",
-                            "resourceId": {
-                              "Fn::GetAtt": [
-                                "ServerlessRestApiCF2706A6",
-                                "RootResourceId"
-                              ]
+                            "domainName": {
+                              "Ref": "ServerlessRestApiCustomDomain2781767F"
                             },
                             "restApiId": {
                               "Ref": "ServerlessRestApiCF2706A6"
                             },
-                            "authorizationType": "NONE",
-                            "integration": {
-                              "type": "MOCK",
-                              "requestTemplates": {
-                                "application/json": "{ statusCode: 200 }"
-                              },
-                              "integrationResponses": [
-                                {
-                                  "statusCode": "204",
-                                  "responseParameters": {
-                                    "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
-                                    "method.response.header.Access-Control-Allow-Origin": "'*'",
-                                    "method.response.header.Access-Control-Allow-Methods": "'GET'"
-                                  }
-                                }
-                              ]
-                            },
-                            "methodResponses": [
-                              {
-                                "statusCode": "204",
-                                "responseParameters": {
-                                  "method.response.header.Access-Control-Allow-Headers": true,
-                                  "method.response.header.Access-Control-Allow-Origin": true,
-                                  "method.response.header.Access-Control-Allow-Methods": true
-                                }
-                              }
-                            ]
+                            "stage": {
+                              "Ref": "ServerlessRestApiDeploymentStageprodA626EFFC"
+                            }
                           }
                         },
                         "constructInfo": {
-                          "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                          "fqn": "aws-cdk-lib.aws_apigateway.CfnBasePathMapping",
                           "version": "2.15.0"
                         }
                       }
                     },
                     "constructInfo": {
-                      "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                      "fqn": "aws-cdk-lib.aws_apigateway.BasePathMapping",
                       "version": "2.15.0"
                     }
-                  },
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.DomainName",
+                  "version": "2.15.0"
+                }
+              },
+              "Default": {
+                "id": "Default",
+                "path": "SampleBackendStack/ServerlessRestApi/Default",
+                "children": {
                   "GET": {
                     "id": "GET",
                     "path": "SampleBackendStack/ServerlessRestApi/Default/GET",
@@ -831,6 +833,113 @@
               "version": "2.15.0"
             }
           },
+          "myCognito": {
+            "id": "myCognito",
+            "path": "SampleBackendStack/myCognito",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "SampleBackendStack/myCognito/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Cognito::UserPool",
+                  "aws:cdk:cloudformation:props": {
+                    "accountRecoverySetting": {
+                      "recoveryMechanisms": [
+                        {
+                          "name": "verified_email",
+                          "priority": 1
+                        }
+                      ]
+                    },
+                    "adminCreateUserConfig": {
+                      "allowAdminCreateUserOnly": false
+                    },
+                    "aliasAttributes": [
+                      "email",
+                      "preferred_username"
+                    ],
+                    "autoVerifiedAttributes": [
+                      "email"
+                    ],
+                    "emailVerificationMessage": "The verification code to your new account is {####}",
+                    "emailVerificationSubject": "Verify your new account",
+                    "schema": [
+                      {
+                        "name": "email",
+                        "mutable": true,
+                        "required": true
+                      },
+                      {
+                        "name": "preferred_username",
+                        "mutable": true,
+                        "required": false
+                      }
+                    ],
+                    "smsVerificationMessage": "The verification code to your new account is {####}",
+                    "verificationMessageTemplate": {
+                      "defaultEmailOption": "CONFIRM_WITH_CODE",
+                      "emailMessage": "The verification code to your new account is {####}",
+                      "emailSubject": "Verify your new account",
+                      "smsMessage": "The verification code to your new account is {####}"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cognito.CfnUserPool",
+                  "version": "2.15.0"
+                }
+              },
+              "myClient": {
+                "id": "myClient",
+                "path": "SampleBackendStack/myCognito/myClient",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "SampleBackendStack/myCognito/myClient/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Cognito::UserPoolClient",
+                      "aws:cdk:cloudformation:props": {
+                        "userPoolId": {
+                          "Ref": "myCognitoA719C4AD"
+                        },
+                        "allowedOAuthFlows": [
+                          "implicit",
+                          "code"
+                        ],
+                        "allowedOAuthFlowsUserPoolClient": true,
+                        "allowedOAuthScopes": [
+                          "profile",
+                          "phone",
+                          "email",
+                          "openid",
+                          "aws.cognito.signin.user.admin"
+                        ],
+                        "callbackUrLs": [
+                          "https://example.com"
+                        ],
+                        "generateSecret": false,
+                        "supportedIdentityProviders": [
+                          "COGNITO"
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_cognito.CfnUserPoolClient",
+                      "version": "2.15.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cognito.UserPoolClient",
+                  "version": "2.15.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_cognito.UserPool",
+              "version": "2.15.0"
+            }
+          },
           "CloudFrontUrl": {
             "id": "CloudFrontUrl",
             "path": "SampleBackendStack/CloudFrontUrl",
@@ -851,17 +960,17 @@
                   "version": "2.15.0"
                 }
               },
-              "ARecord": {
-                "id": "ARecord",
-                "path": "SampleBackendStack/route53Parts/ARecord",
+              "appARecord": {
+                "id": "appARecord",
+                "path": "SampleBackendStack/route53Parts/appARecord",
                 "children": {
                   "Resource": {
                     "id": "Resource",
-                    "path": "SampleBackendStack/route53Parts/ARecord/Resource",
+                    "path": "SampleBackendStack/route53Parts/appARecord/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::Route53::RecordSet",
                       "aws:cdk:cloudformation:props": {
-                        "name": "asai.my-theme.site.",
+                        "name": "asai-app.my-theme.site.",
                         "type": "A",
                         "aliasTarget": {
                           "hostedZoneId": {
@@ -894,17 +1003,17 @@
                   "version": "2.15.0"
                 }
               },
-              "AaaaRecord": {
-                "id": "AaaaRecord",
-                "path": "SampleBackendStack/route53Parts/AaaaRecord",
+              "appAaaaRecord": {
+                "id": "appAaaaRecord",
+                "path": "SampleBackendStack/route53Parts/appAaaaRecord",
                 "children": {
                   "Resource": {
                     "id": "Resource",
-                    "path": "SampleBackendStack/route53Parts/AaaaRecord/Resource",
+                    "path": "SampleBackendStack/route53Parts/appAaaaRecord/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::Route53::RecordSet",
                       "aws:cdk:cloudformation:props": {
-                        "name": "asai.my-theme.site.",
+                        "name": "asai-app.my-theme.site.",
                         "type": "AAAA",
                         "aliasTarget": {
                           "hostedZoneId": {
@@ -920,6 +1029,86 @@
                             "Fn::GetAtt": [
                               "CfDistributionCFDistribution711241B3",
                               "DomainName"
+                            ]
+                          }
+                        },
+                        "hostedZoneId": "Z02650671EO7KVTMWHGB5"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_route53.CfnRecordSet",
+                      "version": "2.15.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_route53.AaaaRecord",
+                  "version": "2.15.0"
+                }
+              },
+              "apiARecord": {
+                "id": "apiARecord",
+                "path": "SampleBackendStack/route53Parts/apiARecord",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "SampleBackendStack/route53Parts/apiARecord/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Route53::RecordSet",
+                      "aws:cdk:cloudformation:props": {
+                        "name": "asai-api.my-theme.site.",
+                        "type": "A",
+                        "aliasTarget": {
+                          "dnsName": {
+                            "Fn::GetAtt": [
+                              "ServerlessRestApiCustomDomain2781767F",
+                              "DistributionDomainName"
+                            ]
+                          },
+                          "hostedZoneId": {
+                            "Fn::GetAtt": [
+                              "ServerlessRestApiCustomDomain2781767F",
+                              "DistributionHostedZoneId"
+                            ]
+                          }
+                        },
+                        "hostedZoneId": "Z02650671EO7KVTMWHGB5"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_route53.CfnRecordSet",
+                      "version": "2.15.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_route53.ARecord",
+                  "version": "2.15.0"
+                }
+              },
+              "apiAaaaRecord": {
+                "id": "apiAaaaRecord",
+                "path": "SampleBackendStack/route53Parts/apiAaaaRecord",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "SampleBackendStack/route53Parts/apiAaaaRecord/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Route53::RecordSet",
+                      "aws:cdk:cloudformation:props": {
+                        "name": "asai-api.my-theme.site.",
+                        "type": "AAAA",
+                        "aliasTarget": {
+                          "dnsName": {
+                            "Fn::GetAtt": [
+                              "ServerlessRestApiCustomDomain2781767F",
+                              "DistributionDomainName"
+                            ]
+                          },
+                          "hostedZoneId": {
+                            "Fn::GetAtt": [
+                              "ServerlessRestApiCustomDomain2781767F",
+                              "DistributionHostedZoneId"
                             ]
                           }
                         },

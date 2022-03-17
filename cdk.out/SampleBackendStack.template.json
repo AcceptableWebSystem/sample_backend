@@ -198,7 +198,7 @@
       "Properties": {
         "DistributionConfig": {
           "Aliases": [
-            "asai.my-theme.site"
+            "asai-app.my-theme.site"
           ],
           "DefaultCacheBehavior": {
             "AllowedMethods": [
@@ -373,7 +373,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "cdk-hnb659fds-assets-312393305492-ap-northeast-1",
-          "S3Key": "4dbe891e7b9264bd5404aae6ca2eb7215fe0d071bdc982fb800c14822eb0525e.zip"
+          "S3Key": "af7015c6cad5decba5a76e56fa710828c6757f6f35db74b1eeb8f446ffc6213f.zip"
         },
         "Role": {
           "Fn::GetAtt": [
@@ -399,7 +399,7 @@
       ],
       "Metadata": {
         "aws:cdk:path": "SampleBackendStack/NotificationMangaLambda/Resource",
-        "aws:asset:path": "asset.4dbe891e7b9264bd5404aae6ca2eb7215fe0d071bdc982fb800c14822eb0525e",
+        "aws:asset:path": "asset.af7015c6cad5decba5a76e56fa710828c6757f6f35db74b1eeb8f446ffc6213f",
         "aws:asset:is-bundled": true,
         "aws:asset:property": "Code"
       }
@@ -413,7 +413,7 @@
         "aws:cdk:path": "SampleBackendStack/ServerlessRestApi/Resource"
       }
     },
-    "ServerlessRestApiDeployment3BF8AA91f558ef14d55c490e7d897a7b211e42f8": {
+    "ServerlessRestApiDeployment3BF8AA917198e834f79264fef6d990fdea9ad68b": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -422,8 +422,7 @@
         "Description": "Automatically created by the RestApi construct"
       },
       "DependsOn": [
-        "ServerlessRestApiGET34A610DA",
-        "ServerlessRestApiOPTIONSC03D3CE8"
+        "ServerlessRestApiGET34A610DA"
       ],
       "Metadata": {
         "aws:cdk:path": "SampleBackendStack/ServerlessRestApi/Deployment/Resource"
@@ -436,7 +435,7 @@
           "Ref": "ServerlessRestApiCF2706A6"
         },
         "DeploymentId": {
-          "Ref": "ServerlessRestApiDeployment3BF8AA91f558ef14d55c490e7d897a7b211e42f8"
+          "Ref": "ServerlessRestApiDeployment3BF8AA917198e834f79264fef6d990fdea9ad68b"
         },
         "StageName": "prod"
       },
@@ -444,49 +443,36 @@
         "aws:cdk:path": "SampleBackendStack/ServerlessRestApi/DeploymentStage.prod/Resource"
       }
     },
-    "ServerlessRestApiOPTIONSC03D3CE8": {
-      "Type": "AWS::ApiGateway::Method",
+    "ServerlessRestApiCustomDomain2781767F": {
+      "Type": "AWS::ApiGateway::DomainName",
       "Properties": {
-        "HttpMethod": "OPTIONS",
-        "ResourceId": {
-          "Fn::GetAtt": [
-            "ServerlessRestApiCF2706A6",
-            "RootResourceId"
+        "CertificateArn": "arn:aws:acm:us-east-1:312393305492:certificate/bddf6609-0ef5-4680-888a-3b1752612f8a",
+        "DomainName": "asai-api.my-theme.site",
+        "EndpointConfiguration": {
+          "Types": [
+            "EDGE"
           ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/ServerlessRestApi/CustomDomain/Resource"
+      }
+    },
+    "ServerlessRestApiCustomDomainMapSampleBackendStackServerlessRestApiCA609621A9FFF5A1": {
+      "Type": "AWS::ApiGateway::BasePathMapping",
+      "Properties": {
+        "DomainName": {
+          "Ref": "ServerlessRestApiCustomDomain2781767F"
         },
         "RestApiId": {
           "Ref": "ServerlessRestApiCF2706A6"
         },
-        "AuthorizationType": "NONE",
-        "Integration": {
-          "IntegrationResponses": [
-            {
-              "ResponseParameters": {
-                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
-                "method.response.header.Access-Control-Allow-Origin": "'*'",
-                "method.response.header.Access-Control-Allow-Methods": "'GET'"
-              },
-              "StatusCode": "204"
-            }
-          ],
-          "RequestTemplates": {
-            "application/json": "{ statusCode: 200 }"
-          },
-          "Type": "MOCK"
-        },
-        "MethodResponses": [
-          {
-            "ResponseParameters": {
-              "method.response.header.Access-Control-Allow-Headers": true,
-              "method.response.header.Access-Control-Allow-Origin": true,
-              "method.response.header.Access-Control-Allow-Methods": true
-            },
-            "StatusCode": "204"
-          }
-        ]
+        "Stage": {
+          "Ref": "ServerlessRestApiDeploymentStageprodA626EFFC"
+        }
       },
       "Metadata": {
-        "aws:cdk:path": "SampleBackendStack/ServerlessRestApi/Default/OPTIONS/Resource"
+        "aws:cdk:path": "SampleBackendStack/ServerlessRestApi/CustomDomain/Map:--=>SampleBackendStackServerlessRestApiCA609621/Resource"
       }
     },
     "ServerlessRestApiGETApiPermissionSampleBackendStackServerlessRestApiCA609621GET822245AB": {
@@ -599,10 +585,89 @@
         "aws:cdk:path": "SampleBackendStack/ServerlessRestApi/Default/GET/Resource"
       }
     },
-    "route53PartsARecordBA7CCA43": {
+    "myCognitoA719C4AD": {
+      "Type": "AWS::Cognito::UserPool",
+      "Properties": {
+        "AccountRecoverySetting": {
+          "RecoveryMechanisms": [
+            {
+              "Name": "verified_email",
+              "Priority": 1
+            }
+          ]
+        },
+        "AdminCreateUserConfig": {
+          "AllowAdminCreateUserOnly": false
+        },
+        "AliasAttributes": [
+          "email",
+          "preferred_username"
+        ],
+        "AutoVerifiedAttributes": [
+          "email"
+        ],
+        "EmailVerificationMessage": "The verification code to your new account is {####}",
+        "EmailVerificationSubject": "Verify your new account",
+        "Schema": [
+          {
+            "Mutable": true,
+            "Name": "email",
+            "Required": true
+          },
+          {
+            "Mutable": true,
+            "Name": "preferred_username",
+            "Required": false
+          }
+        ],
+        "SmsVerificationMessage": "The verification code to your new account is {####}",
+        "VerificationMessageTemplate": {
+          "DefaultEmailOption": "CONFIRM_WITH_CODE",
+          "EmailMessage": "The verification code to your new account is {####}",
+          "EmailSubject": "Verify your new account",
+          "SmsMessage": "The verification code to your new account is {####}"
+        }
+      },
+      "UpdateReplacePolicy": "Retain",
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/myCognito/Resource"
+      }
+    },
+    "myCognitomyClient7C6AA6B5": {
+      "Type": "AWS::Cognito::UserPoolClient",
+      "Properties": {
+        "UserPoolId": {
+          "Ref": "myCognitoA719C4AD"
+        },
+        "AllowedOAuthFlows": [
+          "implicit",
+          "code"
+        ],
+        "AllowedOAuthFlowsUserPoolClient": true,
+        "AllowedOAuthScopes": [
+          "profile",
+          "phone",
+          "email",
+          "openid",
+          "aws.cognito.signin.user.admin"
+        ],
+        "CallbackURLs": [
+          "https://example.com"
+        ],
+        "GenerateSecret": false,
+        "SupportedIdentityProviders": [
+          "COGNITO"
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/myCognito/myClient/Resource"
+      }
+    },
+    "route53PartsappARecord1DF869D1": {
       "Type": "AWS::Route53::RecordSet",
       "Properties": {
-        "Name": "asai.my-theme.site.",
+        "Name": "asai-app.my-theme.site.",
         "Type": "A",
         "AliasTarget": {
           "DNSName": {
@@ -624,13 +689,13 @@
         "HostedZoneId": "Z02650671EO7KVTMWHGB5"
       },
       "Metadata": {
-        "aws:cdk:path": "SampleBackendStack/route53Parts/ARecord/Resource"
+        "aws:cdk:path": "SampleBackendStack/route53Parts/appARecord/Resource"
       }
     },
-    "route53PartsAaaaRecordB5EEA349": {
+    "route53PartsappAaaaRecordB01AA048": {
       "Type": "AWS::Route53::RecordSet",
       "Properties": {
-        "Name": "asai.my-theme.site.",
+        "Name": "asai-app.my-theme.site.",
         "Type": "AAAA",
         "AliasTarget": {
           "DNSName": {
@@ -652,13 +717,63 @@
         "HostedZoneId": "Z02650671EO7KVTMWHGB5"
       },
       "Metadata": {
-        "aws:cdk:path": "SampleBackendStack/route53Parts/AaaaRecord/Resource"
+        "aws:cdk:path": "SampleBackendStack/route53Parts/appAaaaRecord/Resource"
+      }
+    },
+    "route53PartsapiARecord6ED6D449": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "Name": "asai-api.my-theme.site.",
+        "Type": "A",
+        "AliasTarget": {
+          "DNSName": {
+            "Fn::GetAtt": [
+              "ServerlessRestApiCustomDomain2781767F",
+              "DistributionDomainName"
+            ]
+          },
+          "HostedZoneId": {
+            "Fn::GetAtt": [
+              "ServerlessRestApiCustomDomain2781767F",
+              "DistributionHostedZoneId"
+            ]
+          }
+        },
+        "HostedZoneId": "Z02650671EO7KVTMWHGB5"
+      },
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/route53Parts/apiARecord/Resource"
+      }
+    },
+    "route53PartsapiAaaaRecord50BF7AED": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "Name": "asai-api.my-theme.site.",
+        "Type": "AAAA",
+        "AliasTarget": {
+          "DNSName": {
+            "Fn::GetAtt": [
+              "ServerlessRestApiCustomDomain2781767F",
+              "DistributionDomainName"
+            ]
+          },
+          "HostedZoneId": {
+            "Fn::GetAtt": [
+              "ServerlessRestApiCustomDomain2781767F",
+              "DistributionHostedZoneId"
+            ]
+          }
+        },
+        "HostedZoneId": "Z02650671EO7KVTMWHGB5"
+      },
+      "Metadata": {
+        "aws:cdk:path": "SampleBackendStack/route53Parts/apiAaaaRecord/Resource"
       }
     },
     "CDKMetadata": {
       "Type": "AWS::CDK::Metadata",
       "Properties": {
-        "Analytics": "v2:deflate64:H4sIAAAAAAAA/21RTW/CMAz9LdxDtg6xe2FC2oGBYNKOKE1MF2iTKk5AVZX/vnx0wKSd/Bw/Pz87L7SY0+cJu+KUi/O0kRUd9pbxMwlPhwFndFg4fgZLlkc1ohy2upG8vz+PeU4WDMET3mgnjkYrS4eNkbVUJeeA+C5AWWlT8zJyVpHzP+NW/oLqTaI1snJWahV7H3NPRK9Yq0VY4JNVDURCAp40rK0EOygt4IT0I4WVUzzpSNbSYadzQ4r3zTLyBGcHhggWaRnDKEiHQLnpRDqYViImN6yTNbNwZX1QB7RlJ9OAEb5B1+i+DVumRe5ZOH6drGQQ+NoZDvGgZA32W4tYzMgTo52FefikcgdcG5FHRLQPNkvGWM68J0uHVre/eqOXEf8pbY2+SAGGpF2jDalq8ti4cbZzyfiadV2oehJvS0/4dCleaTGjxeSEUk6NC7/YAt3l+APfJAaHbQIAAA=="
+        "Analytics": "v2:deflate64:H4sIAAAAAAAA/21STW/bMAz9Lb0r2rKgu7sJCuzQNkg37BjQEusysURDHy0Cw/99+nCTtNiJj+QjxUfqh1zeyu838O4XSh8XPbVyfA6gjiKF9qNfyfEuqiMGsX6xM6pmyz2p0yU8+9W5A4+TUD1H/eLYBjk+OerINkqh97802kChFK8z5z5z/s84p/9iuyEfHLUxENtce+1PQp8sGNZJwG9oe8yEAibRg2k17C1rPHj5WMx9tKr0ITBy3HEtKPairKJJ+NUevMfgZZPN3FCOiXLuk+noDHlfpoGBOgj4DqfUHX1oBioPzHCDQ88nk1QWIRcvLb8ro1SwYQNkH8GU2JWXN7yF8PoAw0C2K3f4EkpvcXQKc1w8YHhlnWkVpetwZymwHP94dFvmPifP+AOse5qH/ByZhOMY8DZ9kGaHip2u8jJ6TitqAKB60yTW0Qc2H/PMe5jxp9TW8RtpdKLsOa/gWkgufIphiGWeWeYk8l3lwX97W/6Uy5Vc3hw80cLF9IMMyl21/wBdLdKC6QIAAA=="
       },
       "Metadata": {
         "aws:cdk:path": "SampleBackendStack/CDKMetadata/Default"

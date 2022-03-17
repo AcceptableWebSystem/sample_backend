@@ -1,6 +1,11 @@
-import { APIGatewayEvent } from 'aws-lambda';
+import { APIGatewayEvent } from "aws-lambda";
 // ES6+ example
-import { DynamoDBClient, GetItemCommand, GetItemCommandInput, PutItemCommand } from "@aws-sdk/client-dynamodb";
+import {
+  DynamoDBClient,
+  GetItemCommand,
+  GetItemCommandInput,
+  PutItemCommand,
+} from "@aws-sdk/client-dynamodb";
 // npm i @aws-sdk/client-sesでインストール
 import {
   SESClient,
@@ -23,7 +28,15 @@ exports.handler = async function (event: APIGatewayEvent) {
   const command = new SendEmailCommand(params);
   const sesClientSend = await sesClient.send(command);
 
-  return {};
+  return {
+    statusCode: 200,
+    headers: {
+      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Allow-Origin": "https://asai.my-theme.site",
+      "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+    },
+    body: "This is SampleFunc.",
+  };
   // 【DynemoDB】
   // a client can be shared by different commands.
   // const client = new DynamoDBClient({ region: "ap-northeast-1" });
